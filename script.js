@@ -4,6 +4,8 @@ let lastBeatTime = 0;
 let bpm = 120; // Set the BPM of the song (can be detected dynamically)
 let beatInterval = (60 / bpm) * 1000; // Calculate time between beats in milliseconds
 let audioOn = false;
+let maxRadSlider; // Slider for maximum radius
+
 
 let volSense = 200; // Volume sensitivity
 let sliderStep = 1; // Slider step size
@@ -19,8 +21,13 @@ function preload() {
 
 function setup() {
 
-    volSenseSlider = createSlider(0, 200, volSense, sliderStep); // Create a volume sensitivity slider // min.max.value.stepValue
+    volSenseSlider = new sliders(0, volSense, volSense / 2, sliderStep);
     volSenseSlider.position(10, 10);
+    volSenseSlider.text('Volume Sensitivity');
+
+    maxRadSlider = new sliders(0, 100, 50, sliderStep);
+    maxRadSlider.position(10, 50);
+    maxRadSlider.text('Maxiumum Radius');
 
     createCanvas(window.innerWidth / globeScale, window.innerHeight / globeScale);
     getAudioContext().suspend();
