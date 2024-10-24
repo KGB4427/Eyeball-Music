@@ -57,17 +57,9 @@ function draw() {
             lastBeatTime = millis();
             console.log("Beat detected!");
         }
-
-        // Example: Move a circle to the beat
-        fill(100, 0, 0);
-        let timeSinceLastBeat = millis() - lastBeatTime;
-        let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
-        radiusC = min(radiusC, maxRadius);
-        
-        ellipse(width/3, height / 3, radiusC, radiusC); // Move the circle with the beat
-        ellipse(width/1.5, height / 3, radiusC, radiusC); // Move the circle with the beat
         
     }
+    scene1();
 
 }
 
@@ -77,3 +69,39 @@ function mousePressed() {
     console.log("Audio context resumed and microphone started");
 }
 
+// 1 pair of eyes
+function scene1() {
+
+    fill(100, 0, 0);
+    let timeSinceLastBeat = millis() - lastBeatTime;
+    let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
+    radiusC = min(radiusC, maxRadius);
+    
+    ellipse(width/3, height / 3, radiusC, radiusC); // Move the circle with the beat
+    ellipse(width/1.5, height / 3, radiusC, radiusC); // Move the circle with the beat
+
+    
+}
+
+// 4-6 pairs of eyes
+function scene2() {
+    
+    fill(100, 0, 0);
+    let timeSinceLastBeat = millis() - lastBeatTime;
+    let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
+    radiusC = min(radiusC, maxRadius);
+    
+    ellipse(width/3, height / 3, radiusC, radiusC); // Move the circle with the beat
+    ellipse(width/1.5, height / 3, radiusC, radiusC); // Move the circle with the beat
+    
+}
+
+// 10-15 pairs of eyes
+function scene3() {
+    
+}
+
+function mousePressed() {
+    console.log("width / " + width/mouseX);
+    console.log("height / " + height/mouseY));
+}
