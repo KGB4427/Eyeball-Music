@@ -6,7 +6,6 @@ let beatInterval = (60 / bpm) * 1000; // Calculate time between beats in millise
 let audioOn = false;
 let maxRadSlider; // Slider for maximum radius
 
-
 let volSense = 200; // Volume sensitivity
 let sliderStep = 1; // Slider step size
 
@@ -77,3 +76,48 @@ function mousePressed() {
     console.log("Audio context resumed and microphone started");
 }
 
+// 1 pair of eyes
+function scene1() {
+
+    fill(100, 0, 0);
+    let timeSinceLastBeat = millis() - lastBeatTime;
+    let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
+    radiusC = min(radiusC, maxRadius);
+
+    ellipse(width/3, height / 3, radiusC, radiusC); // Move the circle with the beat
+    ellipse(width/1.5, height / 3, radiusC, radiusC); // Move the circle with the beat
+
+    //////////////////////////////////
+    // TESTING CODE FOR pupils CLASS//
+    //////////////////////////////////
+    
+    // let leftEye;
+    // leftEye = new pupils(width/5, height / 5, radiusC, color(0, 0, 255));
+    // leftEye.color(0, 255, 0);
+    // leftEye.display();
+
+    
+}
+
+// 4-6 pairs of eyes
+function scene2() {
+    
+    fill(100, 0, 0);
+    let timeSinceLastBeat = millis() - lastBeatTime;
+    let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
+    radiusC = min(radiusC, maxRadius);
+    
+    ellipse(width/3, height / 3, radiusC, radiusC); // Move the circle with the beat
+    ellipse(width/1.5, height / 3, radiusC, radiusC); // Move the circle with the beat
+    
+}
+
+// 10-15 pairs of eyes
+function scene3() {
+    
+}
+
+function mousePressed() {
+    console.log("width / " + width/mouseX);
+    console.log("height / " + height/mouseY);
+}
