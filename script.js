@@ -30,13 +30,13 @@ function preload() {
     //     scene2eyeliner.push(loadImage(`./photos/scene2/Sc2_Eyeliner${i}.png`));
     // }
 
-    for (let i = 1; i <= 5; i++) {
-        scene3pupils.push(loadImage(`./photos/scene3/pupil${i}.png`));
-    }
+    // for (let i = 1; i <= 5; i++) {
+    //     scene3pupils.push(loadImage(`./photos/scene3/pupil${i}.png`));
+    // }
 
-    for (let i = 1; i <= 5; i++) {
-        scene3eyeliner.push(loadImage(`./photos/scene3/pupil${i}.png`));
-    }
+    // for (let i = 1; i <= 5; i++) {
+    //     scene3eyeliner.push(loadImage(`./photos/scene3/pupil${i}.png`));
+    // }
 
 }
 
@@ -135,8 +135,8 @@ function scene2() {
 }
 
 // 10-15 pairs of eyes
-function scene3() {
+// function scene3() {
     
-    image(scene3pupils[0], 300, 300, 100, 100);
+//     image(scene3pupils[0], 300, 300, 100, 100);
     
-}
+// }
