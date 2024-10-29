@@ -6,11 +6,11 @@ let beatInterval = (60 / bpm) * 1000; // Calculate time between beats in millise
 let audioOn = false;
 let maxRadSlider; // Slider for maximum radius
 
+
 let scene3pupils = [];
 let scene3eyeliner = [];
 let scene2pupils = [];
 let scene2eyeliner = [];
-
 
 let volSense = 200; // Volume sensitivity
 let sliderStep = 1; // Slider step size
@@ -96,6 +96,17 @@ function scene1() {
     let timeSinceLastBeat = millis() - lastBeatTime;
     let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
     radiusC = min(radiusC, maxRadius);
+
+    //////////////////////////////////
+    // TESTING CODE FOR pupils CLASS//
+    //////////////////////////////////
+    
+    // let leftEye;
+    // leftEye = new pupils(width/5, height / 5, radiusC, color(0, 0, 255));
+    // leftEye.color(0, 255, 0);
+    // leftEye.display();
+
+
     
     maxRadius = globeScale * maxRadSlider.slider.value() / 100; // Set the maximum radius of the circle
     //console.log("Max Radius: ", maxRadius); // Log the maximum radius for debugging
@@ -129,9 +140,3 @@ function scene3() {
     image(scene3pupils[0], 300, 300, 100, 100);
     
 }
-
-// function mousePressed() {
-//     console.log("width / " + width/mouseX);
-//     console.log("height / " + height/mouseY);
-//     AudioContext.resume();
-// }
