@@ -103,5 +103,5 @@ function scene3() {
 
 function mousePressed() {
     console.log("width / " + width/mouseX);
-    console.log("height / " + height/mouseY));
+    console.log("height / " + height/mouseY);
 }
