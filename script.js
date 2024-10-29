@@ -56,17 +56,9 @@ function draw() {
             lastBeatTime = millis();
             console.log("Beat detected!");
         }
-
-        // Example: Move a circle to the beat
-        fill(100, 0, 0);
-        let timeSinceLastBeat = millis() - lastBeatTime;
-        let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
-        radiusC = min(radiusC, maxRadius);
-        
-        ellipse(width/3, height / 3, radiusC, radiusC); // Move the circle with the beat
-        ellipse(width/1.5, height / 3, radiusC, radiusC); // Move the circle with the beat
         
     }
+    scene1();
 
 }
 
@@ -84,9 +76,6 @@ function scene1() {
     let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
     radiusC = min(radiusC, maxRadius);
 
-    ellipse(width/3, height / 3, radiusC, radiusC); // Move the circle with the beat
-    ellipse(width/1.5, height / 3, radiusC, radiusC); // Move the circle with the beat
-
     //////////////////////////////////
     // TESTING CODE FOR pupils CLASS//
     //////////////////////////////////
@@ -95,6 +84,11 @@ function scene1() {
     // leftEye = new pupils(width/5, height / 5, radiusC, color(0, 0, 255));
     // leftEye.color(0, 255, 0);
     // leftEye.display();
+
+
+    
+    ellipse(width/3, height / 3, radiusC, radiusC); // Move the circle with the beat
+    ellipse(width/1.5, height / 3, radiusC, radiusC); // Move the circle with the beat
 
     
 }
@@ -120,4 +114,6 @@ function scene3() {
 function mousePressed() {
     console.log("width / " + width/mouseX);
     console.log("height / " + height/mouseY);
+
+
 }
