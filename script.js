@@ -83,6 +83,8 @@ function draw() {
         trebleEnergy = fft.getEnergy("treble"); // High frequency energy
 
         console.log("Bass Energy: ", bassEnergy); // Log bass energy for debugging
+        console.log("Mid Energy: ", midEnergy); // Log mid energy for debugging
+        console.log("Treble Energy: ", trebleEnergy); // Log treble energy for debugging
 
         // Check for a beat (if bass energy exceeds a threshold)
         if (bassEnergy > freqThreshold && millis() - lastBeatTime > beatInterval * 0.8) {
@@ -108,9 +110,9 @@ function draw() {
 
     // Call the current scene function
     if (currentScene === 1) {
-        scene1();
+        scene3();
     } else if (currentScene === 2) {
-        scene2();
+        scene3();
     } else if (currentScene === 3) {
         scene3();
     }
