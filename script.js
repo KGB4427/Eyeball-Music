@@ -56,7 +56,7 @@ function setup() {
     volSenseSlider.position(10, 10);
     volSenseSlider.text('Volume Sensitivity');
 
-    maxRadSlider = new sliders(20, 100, 50, sliderStep);
+    maxRadSlider = new sliders(10, 30, 15, sliderStep);
     maxRadSlider.position(10, 50);
     maxRadSlider.text('Maximum Radius');
 
@@ -133,13 +133,14 @@ function scene1() {
     fill(100, 0, 0);
     let timeSinceLastBeat = millis() - lastBeatTime;
     let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
-    radiusC = min(radiusC, maxRadius);
+    maxRadius = globeScale * maxRadSlider.slider.value() / 10000; // Set the maximum radius of the circle
 
-    maxRadius = globeScale * maxRadSlider.slider.value() / 100; // Set the maximum radius of the circle
+    radiusC = bassEnergy * maxRadius; // Set the radius of the circle based on the bass energy
+
     //console.log("Max Radius: ", maxRadius); // Log the maximum radius for debugging
 
-    ellipse(width/3, height / 3, radiusC, radiusC); // Move the circle with the beat
-    ellipse(width/1.5, height / 3, radiusC, radiusC); // Move the circle with the beat
+    drawStar(width/3, height / 3, radiusC / 2, radiusC, 6); // Move the circle with the beat
+    drawStar(width/1.5, height / 3, radiusC / 2, radiusC, 6); // Move the circle with the beat
 
     
 }

@@ -83,3 +83,21 @@ class eyes {
         image(scene3eyes[i % scene3pupils.length], pupilX, pupilY, pupilSize, pupilSize);
     }
 }
+
+
+//Star made by smparks on p5.js forum
+
+function drawStar(x, y, radius1, radius2, npoints) {
+    let angle = TWO_PI / npoints;
+    let halfAngle = angle / 2;
+    beginShape();
+    for (let a = -PI/2; a < TWO_PI - PI/2; a += angle) {
+      let sx = x + cos(a) * radius2;
+      let sy = y + sin(a) * radius2;
+      vertex(sx, sy);
+      sx = x + cos(a + halfAngle) * radius1;
+      sy = y + sin(a + halfAngle) * radius1;
+      vertex(sx, sy);
+    }
+    endShape(CLOSE);
+  }
