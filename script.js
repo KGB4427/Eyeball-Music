@@ -96,8 +96,8 @@ function draw() {
     let elapsedTime = millis() - sceneStartTime;
     console.log(`Elapsed Time: ${elapsedTime}, Current Scene: ${currentScene}`);
 
-    // Switch scenes every 5 seconds (5000 milliseconds)
-    if (elapsedTime > 5000) {
+    // Switch scenes every 10 seconds (10000 milliseconds)
+    if (elapsedTime > 10000) {
         currentScene++;
         if (currentScene > 3) {
             currentScene = 1; // Loop back to scene1
@@ -108,9 +108,9 @@ function draw() {
 
     // Call the current scene function
     if (currentScene === 1) {
-        scene3();
+        scene1();
     } else if (currentScene === 2) {
-        scene3();
+        scene2();
     } else if (currentScene === 3) {
         scene3();
     }
