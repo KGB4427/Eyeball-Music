@@ -110,9 +110,9 @@ function draw() {
 
     // Call the current scene function
     if (currentScene === 1) {
-        scene3();
+        scene1();
     } else if (currentScene === 2) {
-        scene3();
+        scene2();
     } else if (currentScene === 3) {
         scene3();
     }
