@@ -11,7 +11,6 @@ let audioOn = false;
 let maxRadSlider; // Slider for maximum radius
 let collageBackground;
 
-
 let scene3pupils = [];
 let scene3eyeliner = [];
 let scene3eyes = [];
@@ -30,15 +29,15 @@ let ratio = 1.6; // 16:10 aspect ratio
 let globeScale;
 let maxRadius; // Maximum radius of the circle
 
+//EYES OBJECT --------------------------------
+let eyesObject = []; 
+
+//Transition
+let alphaT = 100;
+let fadeSpeed = 1;
+let resetAlpha = false; 
+
 function preload() {
-    // for( let i = 1; i <= 4; i++) {
-    //     scene2pupils.push(loadImage(`./photos/scene2/Sc2_Pupil${i}.png`));
-    // }
-
-    // for( let i = 1; i <= 4; i++) {
-    //     scene2eyeliner.push(loadImage(`./photos/scene2/Sc2_Eyeliner${i}.png`));
-    // }
-
     for (let i = 1; i <= 5; i++) {
         scene3pupils.push(loadImage(`./photos/scene3/Pupil${i}.png`));
     }
@@ -52,11 +51,9 @@ function preload() {
     }
 
     collageBackground = loadImage('./photos/temp_background.png');
-
 }
 
 function setup() {
-
     volSenseSlider = new sliders(20, volSense * 2, volSense / 2, sliderStep);
     volSenseSlider.position(10, 10);
     volSenseSlider.text('Volume Sensitivity');
@@ -75,15 +72,16 @@ function setup() {
 
     sceneStartTime = millis(); // Initialize the scene start time
 
-    //image(collageBackground, 0, 0, width, height);
-
-    
+    // Create instances of the Eyes class and store them in the eyes array
+    for (let i = 0; i < scene3eyeliner.length; i++) {
+        eyesObject.push(new Eyes(i));
+    }   
 }
-  
-function draw() {
 
-    background(220);
-    //image(collageBackground, 0, 0, width, height);
+function draw() {
+    tint(255, 30); // alpha 0-100
+    image(collageBackground, 0, 0, width, height);
+    noTint();
 
     if (audioOn) {
         fft.analyze();
@@ -102,14 +100,13 @@ function draw() {
         // Check for a beat (if bass energy exceeds a threshold)
         if (bassEnergy > freqThreshold && millis() - lastBeatTime > beatInterval * 0.8) {
             lastBeatTime = millis();
-            console.log("Beat detected!");
+            //console.log("Beat detected!");
         }
-        
     }
 
     // Calculate the elapsed time since the scene started
     let elapsedTime = millis() - sceneStartTime;
-    console.log(`Elapsed Time: ${elapsedTime}, Current Scene: ${currentScene}`);
+    //console.log(`Elapsed Time: ${elapsedTime}, Current Scene: ${currentScene}`);
 
     // Switch scenes every 10 seconds (10000 milliseconds)
     if (elapsedTime > 10000) {
@@ -118,18 +115,21 @@ function draw() {
             currentScene = 1; // Loop back to scene1
         }
         sceneStartTime = millis(); // Reset the scene start time
+        resetAlpha = true; // Set the flag to reset alpha
         console.log(`Switching to Scene: ${currentScene}`);
     }
 
     // Call the current scene function
     if (currentScene === 1) {
-        scene3();
+        sceneTransition();
+        scene1();
     } else if (currentScene === 2) {
+        sceneTransition();
         scene3();
     } else if (currentScene === 3) {
+        sceneTransition();
         scene3();
     }
-
 }
 
 function mousePressed() {
@@ -142,9 +142,7 @@ function mousePressed() {
 
 // 1 pair of eyes
 function scene1() {
-
     let angle = 0;
-    
 
     fill(100, 0, 0);
     let timeSinceLastBeat = millis() - lastBeatTime;
@@ -157,35 +155,44 @@ function scene1() {
 
     let starPoints = 4 + highMidEnergy / 10; // Set the number of points on the star based on treble energy
 
-
-    drawStar(width/3, height / 3, radiusC / 2, radiusC, starPoints); // Move the circle with the beat
-    drawStar(width/1.5, height / 3, radiusC / 2, radiusC, starPoints); // Move the circle with the beat
-
-    
+    drawStar(width / 3, height / 3, radiusC / 2, radiusC, starPoints); // Move the circle with the beat
+    drawStar(width / 1.5, height / 3, radiusC / 2, radiusC, starPoints); // Move the circle with the beat
 }
 
 // 4-6 pairs of eyes
 function scene2() {
-    
-//     fill(100, 0, 0);
-//     let timeSinceLastBeat = millis() - lastBeatTime;
-//     let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
-//     radiusC = min(radiusC, maxRadius);
-    
-//     ellipse(width/3, height / 3, radiusC, radiusC); // Move the circle with the beat
-//     ellipse(width/1.5, height / 3, radiusC, radiusC); // Move the circle with the beat
-//     for( let i = 1; i <= 4; i++) {
-//         image(scene2eyeliner[i], 0, 0);
-//         image(scene2pupils[i], 0, 0);
-//     }
-    
+    // fill(100, 0, 0);
+    // let timeSinceLastBeat = millis() - lastBeatTime;
+    // let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
+    // radiusC = min(radiusC, maxRadius);
+
+    // ellipse(width/3, height / 3, radiusC, radiusC); // Move the circle with the beat
+    // ellipse(width/1.5, height / 3, radiusC, radiusC); // Move the circle with the beat
+    // for( let i = 1; i <= 4; i++) {
+    //     image(scene2eyeliner[i], 0, 0);
+    //     image(scene2pupils[i], 0, 0);
+    // }
 }
 
 // 10-15 pairs of eyes
 function scene3() {
+    // Iterate over the eyes array and call displayEyes for each instance
+    for (let i = 0; i < eyesObject.length; i++) {
+        eyesObject[i].displayEyes();
+    }
+}
 
-    // Draw the images at the calculated positions and sizes
-    for (let i = 0; i < scene3eyeliner.length; i++) {
-        let eye = new eyes(i);
-    }    
+function sceneTransition() {
+    if (resetAlpha) {
+        alphaT = 100; // Reset alpha value
+        resetAlpha = false; // Reset the flag
+    }
+    rectMode(CENTER);
+    noStroke();
+    fill(0, alphaT);
+    rect(width / 2, height / 2, width, height);
+    alphaT -= fadeSpeed;
+    if (alphaT <= 0) {
+        alphaT = 0;
+    }
 }
