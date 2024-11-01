@@ -12,7 +12,7 @@ class sliders {
 
     text(label) {
         this.label = label; // Set the label of the slider
-        this.labelP.style('color', 'white'); // Set the color of the label text
+        //this.labelP.style('color', 'white'); // Set the color of the label text
         this.labelP.html(label); // Update the paragraph element with the label text
     }
 }
@@ -61,23 +61,20 @@ class eyes {
         
         if (bassEnergy > bassThreshold || midEnergy > midThreshold || trebleEnergy > trebleThreshold) { 
             // Use noise to generate smooth random values for the pupil positions
-            let baseNoiseOffsetX = noise(frameCount * 0.0005) * imgWidth / 4 - imgWidth / 8; // Slower noise
-            let baseNoiseOffsetY = noise(frameCount * 0.0005) * imgHeight / 4 - imgHeight / 8; // Slower noise
-
-            // Additional movement component based on bassEnergy
-            let midMovementX = (midEnergy / 255) * (noise(frameCount * 0.0005) - 0.5) * imgWidth / 4; // Slower noise
-            let midMovementY = (midEnergy / 255) * (noise(frameCount * 0.0005) - 0.5) * imgHeight / 4; // Slower noise
+            let baseNoiseOffsetX = noise(frameCount * 0.01 * lerp(0, highMidEnergy, 0.001)) * imgWidth / 4 - imgWidth / 8; // Slower noise
+            let baseNoiseOffsetY = noise(frameCount * 0.01 * lerp (0, bassEnergy, 0.001)) * imgHeight / 4 - imgHeight / 8; // Slower noise
 
             // Scale the noise offsets by the volSenseSlider value to control shaking intensity
-            let shakingIntensity = Math.log10(volSenseSlider.slider.value()) * 10;
+            let shakingIntensity = volSenseSlider.slider.value();
 
             // Combine base movement and bass energy movement
-            pupilX += (baseNoiseOffsetX * midMovementX * trebleEnergy * random([-0.05, 0.05]) * shakingIntensity) / 100;
-            pupilY += (baseNoiseOffsetY * midMovementY * bassEnergy * random([-0.05, 0.05]) * shakingIntensity) / 100;
+            pupilX += (baseNoiseOffsetX * highMidEnergy) * shakingIntensity / 1000;
+            pupilY += (baseNoiseOffsetY * bassEnergy) * shakingIntensity / 1000;
 
             // Constrain the pupil positions to the canvas
-            pupilX = constrain(pupilX, 0, width);
-            pupilY = constrain(pupilY, 0, height); // Adjusted to move the eyes up
+            pupilX = constrain(pupilX, 0, width - pupilSize / 2); // Adjusted to move the eyes up
+            pupilY = constrain(pupilY, 0, height - pupilSize / 2); // Adjusted to move the eyes up
+
         }
 
         imageMode(CENTER);

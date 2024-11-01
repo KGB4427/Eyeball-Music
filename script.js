@@ -51,7 +51,7 @@ function preload() {
         scene3eyes.push(loadImage(`./photos/scene3/Eye${i}.png`));
     }
 
-    collageBackground = loadImage('./photos/temp_background.jpg');
+    collageBackground = loadImage('./photos/temp_background.png');
 
 }
 
@@ -82,8 +82,8 @@ function setup() {
   
 function draw() {
 
-    //background(220);
-    image(collageBackground, 0, 0, width, height);
+    background(220);
+    //image(collageBackground, 0, 0, width, height);
 
     if (audioOn) {
         fft.analyze();
@@ -123,9 +123,9 @@ function draw() {
 
     // Call the current scene function
     if (currentScene === 1) {
-        scene1();
+        scene3();
     } else if (currentScene === 2) {
-        scene2();
+        scene3();
     } else if (currentScene === 3) {
         scene3();
     }
