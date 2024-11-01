@@ -12,6 +12,7 @@ class sliders {
 
     text(label) {
         this.label = label; // Set the label of the slider
+        this.labelP.style('color', 'white'); // Set the color of the label text
         this.labelP.html(label); // Update the paragraph element with the label text
     }
 }
@@ -81,6 +82,7 @@ class eyes {
 
         imageMode(CENTER);
         image(scene3eyes[i % scene3pupils.length], pupilX, pupilY, pupilSize, pupilSize);
+        imageMode(CORNER);
     }
 }
 

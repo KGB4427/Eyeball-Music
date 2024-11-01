@@ -2,11 +2,14 @@ let mic, fft;
 let bassEnergy;
 let trebleEnergy;
 let midEnergy;
+let lowMidEnergy;
+let highMidEnergy;
 let lastBeatTime = 0;
 let bpm = 120; // Set the BPM of the song (can be detected dynamically)
 let beatInterval = (60 / bpm) * 1000; // Calculate time between beats in milliseconds
 let audioOn = false;
 let maxRadSlider; // Slider for maximum radius
+let collageBackground;
 
 
 let scene3pupils = [];
@@ -48,6 +51,8 @@ function preload() {
         scene3eyes.push(loadImage(`./photos/scene3/Eye${i}.png`));
     }
 
+    collageBackground = loadImage('./photos/temp_background.jpg');
+
 }
 
 function setup() {
@@ -69,21 +74,29 @@ function setup() {
     fft.setInput(mic);
 
     sceneStartTime = millis(); // Initialize the scene start time
+
+    //image(collageBackground, 0, 0, width, height);
+
     
 }
   
 function draw() {
 
-    background(220);
+    //background(220);
+    image(collageBackground, 0, 0, width, height);
 
     if (audioOn) {
         fft.analyze();
         bassEnergy = fft.getEnergy("bass"); // Low frequency energy
+        lowMidEnergy = fft.getEnergy("lowMid"); // Low mid frequency energy
         midEnergy = fft.getEnergy("mid"); // Mid frequency energy
+        highMidEnergy = fft.getEnergy("highMid"); // High mid frequency energy
         trebleEnergy = fft.getEnergy("treble"); // High frequency energy
 
         console.log("Bass Energy: ", bassEnergy); // Log bass energy for debugging
+        console.log("Low Mid Energy: ", lowMidEnergy); // Log low mid energy for debugging
         console.log("Mid Energy: ", midEnergy); // Log mid energy for debugging
+        console.log("High Mid Energy: ", highMidEnergy); // Log high mid energy for debugging
         console.log("Treble Energy: ", trebleEnergy); // Log treble energy for debugging
 
         // Check for a beat (if bass energy exceeds a threshold)
@@ -130,6 +143,9 @@ function mousePressed() {
 // 1 pair of eyes
 function scene1() {
 
+    let angle = 0;
+    
+
     fill(100, 0, 0);
     let timeSinceLastBeat = millis() - lastBeatTime;
     let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
@@ -139,8 +155,11 @@ function scene1() {
 
     //console.log("Max Radius: ", maxRadius); // Log the maximum radius for debugging
 
-    drawStar(width/3, height / 3, radiusC / 2, radiusC, 6); // Move the circle with the beat
-    drawStar(width/1.5, height / 3, radiusC / 2, radiusC, 6); // Move the circle with the beat
+    let starPoints = 4 + highMidEnergy / 10; // Set the number of points on the star based on treble energy
+
+
+    drawStar(width/3, height / 3, radiusC / 2, radiusC, starPoints); // Move the circle with the beat
+    drawStar(width/1.5, height / 3, radiusC / 2, radiusC, starPoints); // Move the circle with the beat
 
     
 }
