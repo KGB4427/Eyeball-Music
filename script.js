@@ -16,6 +16,7 @@ let scene3eyeliner = [];
 let scene3eyes = [];
 let scene2pupils = [];
 let scene2eyeliner = [];
+let scene1eyes;
 
 let currentScene = 1;
 let sceneStartTime;
@@ -38,6 +39,15 @@ let fadeSpeed = 1;
 let resetAlpha = false; 
 
 function preload() {
+
+    scene1eyes = loadImage('./photos/scene1/Eyes1.png');
+
+    for (let i = 1; i <= 4; i++) {
+        scene2pupils.push(loadImage(`./photos/scene2/Sc2_Pupil${i}.png`));
+    }
+    for (let i = 1; i <= 4; i++) {
+        scene2eyeliner.push(loadImage(`./photos/scene2/Sc2_Eyeliner${i}.png`));
+    }
     for (let i = 1; i <= 5; i++) {
         scene3pupils.push(loadImage(`./photos/scene3/Pupil${i}.png`));
     }
@@ -50,7 +60,7 @@ function preload() {
         scene3eyes.push(loadImage(`./photos/scene3/Eye${i}.png`));
     }
 
-    collageBackground = loadImage('./photos/temp_background.png');
+    collageBackground = loadImage('./photos/Collage bg1.png');
 }
 
 function setup() {
@@ -75,11 +85,13 @@ function setup() {
     // Create instances of the Eyes class and store them in the eyes array
     for (let i = 0; i < scene3eyeliner.length; i++) {
         eyesObject.push(new Eyes(i));
-    }   
+    }
+    
+    colorMode(HSB, 100);
 }
 
 function draw() {
-    tint(255, 30); // alpha 0-100
+    tint(255, 90); // alpha 0-100
     image(collageBackground, 0, 0, width, height);
     noTint();
 
@@ -125,7 +137,7 @@ function draw() {
         scene1();
     } else if (currentScene === 2) {
         sceneTransition();
-        scene3();
+        scene2();
     } else if (currentScene === 3) {
         sceneTransition();
         scene3();
@@ -144,7 +156,7 @@ function mousePressed() {
 function scene1() {
     let angle = 0;
 
-    fill(100, 0, 0);
+    fill(map(midEnergy, 0, 400, 0, 255), 100, 50);
     let timeSinceLastBeat = millis() - lastBeatTime;
     let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
     maxRadius = globeScale * maxRadSlider.slider.value() / 10000; // Set the maximum radius of the circle
@@ -155,23 +167,25 @@ function scene1() {
 
     let starPoints = 4 + highMidEnergy / 10; // Set the number of points on the star based on treble energy
 
-    drawStar(width / 3, height / 3, radiusC / 2, radiusC, starPoints); // Move the circle with the beat
-    drawStar(width / 1.5, height / 3, radiusC / 2, radiusC, starPoints); // Move the circle with the beat
+    drawStar(width / 3.5, height / 1.7, radiusC / 4, radiusC / 2, starPoints); // Move the circle with the beat
+    drawStar(width / 1.35, height / 1.8, radiusC / 4, radiusC / 2, starPoints); // Move the circle with the beat
+
+    image(scene1eyes, 0, 0, width, height);
 }
 
 // 4-6 pairs of eyes
 function scene2() {
-    // fill(100, 0, 0);
-    // let timeSinceLastBeat = millis() - lastBeatTime;
-    // let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
-    // radiusC = min(radiusC, maxRadius);
+    //fill(100, 0, 0);
+    //let timeSinceLastBeat = millis() - lastBeatTime;
+    //let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
+    //radiusC = min(radiusC, maxRadius);
 
-    // ellipse(width/3, height / 3, radiusC, radiusC); // Move the circle with the beat
-    // ellipse(width/1.5, height / 3, radiusC, radiusC); // Move the circle with the beat
-    // for( let i = 1; i <= 4; i++) {
-    //     image(scene2eyeliner[i], 0, 0);
-    //     image(scene2pupils[i], 0, 0);
-    // }
+    //ellipse(width / 3, height / 3, radiusC, radiusC); // Move the circle with the beat
+    //ellipse(width / 1.5, height / 3, radiusC, radiusC); // Move the circle with the beat
+    new Sc2EYES(trebleEnergy, 100, 100, 1);
+    new Sc2EYES(lowMidEnergy, 100, 100, 2);
+    new Sc2EYES(midEnergy, 100, 100, 3);
+    new Sc2EYES(highMidEnergy, 100, 100, 4);
 }
 
 // 10-15 pairs of eyes

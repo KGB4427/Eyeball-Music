@@ -22,17 +22,19 @@ class Eyes {
     constructor(i) {
         this.i = i;
         // Calculate the positions and sizes based on the canvas dimensions and scaling factors
-        this.imgWidth = random(globeScale*0.1, globeScale*0.5); // Adjust the divisor to control the size
+        this.imgWidth = globeScale * 0.3; // Adjust the divisor to control the size
         this.imgHeight = random(globeScale*0.1, globeScale*0.5); // Adjust the divisor to control the size
 
 
         // Calculate positions based on the canvas dimensions and scaling factors
         this.xPos = width / 6; // Adjust the divisor to control the position
-        this.yPos = height / 4; // Adjust the divisor to control the position
+        this.yPos = height / 2; // Adjust the divisor to control the position
 
         // Constrain the pupil to the position of the eyeliner image
-        this.pupilX = this.xPos + i * this.imgWidth / 1.2;
-        this.pupilY = this.yPos + this.imgHeight / 2;
+        this.initialPupilX = this.xPos + i * this.imgWidth / 1.2;
+        this.initialPupilY = this.yPos + this.imgHeight / 2;
+        this.pupilX = this.initialPupilX;
+        this.pupilY = this.initialPupilY;
 
         // Set a fixed size for the pupil
         this.pupilSize = this.imgWidth;
@@ -41,6 +43,8 @@ class Eyes {
         this.bassThreshold = 160; // Adjust this threshold as needed
         this.trebleThreshold = 0; // Adjust this threshold as needed
         this.midThreshold = 0; // Adjust this threshold as needed
+
+        this.shakingIntensity = volSenseSlider.slider.value(); // Adjust this value as needed
     }
 
     displayEyes() {
@@ -51,15 +55,15 @@ class Eyes {
             let baseNoiseOffsetX = noise(xoff * lerp(0, highMidEnergy, 0.001)) * this.imgWidth / 4 - this.imgWidth / 8; // Slower noise
             let baseNoiseOffsetY = noise(yoff * lerp(0, bassEnergy, 0.001)) * this.imgHeight / 4 - this.imgHeight / 8; // Slower noise
 
-           xoff += 0.001; 
-            yoff += 0.001;
+            xoff += 10; 
+            yoff += 10;
 
             // Scale the noise offsets by the volSenseSlider value to control shaking intensity
-            let shakingIntensity = volSenseSlider.slider.value();
-
             // Combine base movement and bass energy movement
+            //this.pupilX = this.initialPupilX + (baseNoiseOffsetX * highMidEnergy) * this.shakingIntensity / 1000;
+            this.pupilY = this.initialPupilY + (baseNoiseOffsetY * bassEnergy) * this.shakingIntensity / 5000;
             //this.pupilX += (baseNoiseOffsetX * highMidEnergy) * shakingIntensity / 1000;
-            this.pupilY += (baseNoiseOffsetY * bassEnergy) * shakingIntensity / 1000;
+            //this.pupilY += (baseNoiseOffsetY * bassEnergy) * this.shakingIntensity / 5000;
 
             // Constrain the pupil positions to the canvas
             this.pupilX = constrain(this.pupilX, 0, width - this.pupilSize / 2); // Adjusted to move the eyes up
@@ -72,6 +76,25 @@ class Eyes {
     }
 }
 
+class Sc2EYES {
+    constructor(energyR, energyG, energyB,  i) {
+
+        this.energyR = energyR;
+        this.energyG = energyG;
+        this.energyB = energyB;
+
+        this.i = i;
+
+        this.R = map(this.energyR, 0, 400, 0, 255);
+        this.G = map(this.energyG, 0, 400, 0, 255);
+        this.B = map(this.energyB, 0, 400, 0, 255);
+
+        tint(0, 0, 100);
+        image(scene2eyeliner[i % scene2eyeliner.length], 0, 0, width, height);
+        tint(this.R, this.G, this.B);
+        image(scene2pupils[i % scene2pupils.length], 0, 0, width, height);
+    }
+}
 
 //Star made by smparks on p5.js forum
 
