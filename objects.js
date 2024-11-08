@@ -65,15 +65,21 @@ class Sc2EYES {
         this.energyB = energyB;
 
         this.i = i;
-
-        this.R = map(this.energyR, 0, volSenseSlider.slider.value(), 0, 255);
-        this.G = map(this.energyG, 0, volSenseSlider.slider.value(), 0, 255);
-        this.B = map(this.energyB, 0, volSenseSlider.slider.value(), 0, 255);
+    }
+    update(energyR, energyG, energyB) {
+        this.energyR = energyR;
+        this.energyG = energyG;
+        this.energyB = energyB;
+    }
+    display() {
+        this.R = (this.energyR * volSenseSlider.slider.value()) % 255;
+        this.G = this.energyG * volSenseSlider.slider.value();
+        this.B = this.energyB * volSenseSlider.slider.value();
 
         tint(0, 0, 250);
-        image(scene2eyeliner[i % scene2eyeliner.length], 0, 0, width, height);
+        image(scene2eyeliner[this.i % scene2eyeliner.length], 0, 0, width, height);
         tint(this.R, this.G, this.B);
-        image(scene2pupils[i % scene2pupils.length], 0, 0, width, height);
+        image(scene2pupils[this.i % scene2pupils.length], 0, 0, width, height);
     }
 }
 

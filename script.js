@@ -21,8 +21,8 @@ let scene1eyes;
 let currentScene = 1;
 let sceneStartTime;
 
-let volSense = 100; // Volume sensitivity
-let sliderStep = 1; // Slider step size
+let volSense = 1; // Volume sensitivity
+let sliderStep = 0.01; // Slider step size
 
 let freqThreshold = 150; // Set the threshold for bass energy 0 is high 200 is low
 
@@ -36,7 +36,12 @@ let eyesObject = [];
 //Transition
 let alphaT = 100;
 let fadeSpeed = 1;
-let resetAlpha = false; 
+let resetAlpha = false;
+
+let music;
+let startAudio = false; // Start audio flag
+
+let sc2Eyes = []; // Array to hold instances of Sc2EYES
 
 function preload() {
 
@@ -64,39 +69,42 @@ function preload() {
 }
 
 function setup() {
-    volSenseSlider = new sliders(1, volSense, volSense / 2, sliderStep);
+    volSenseSlider = new sliders(0, volSense, volSense / 2, sliderStep);
     volSenseSlider.position(10, 10);
     volSenseSlider.text('Volume Sensitivity');
     volSenseSlider.slider.id('sensitivitySlider'); // Assign an ID to the slider
 
-    // maxRadSlider = new sliders(10, 30, 15, sliderStep);
-    // maxRadSlider.position(10, 50);
-    // maxRadSlider.text('Maximum Radius');
-
     createCanvas(window.innerWidth, window.innerWidth / ratio);
+    colorMode(HSB, 255);
     globeScale = min(width, height);
     getAudioContext().suspend();
+    let audio = new Audio('./Brittle_Bones_Nicky_3.wav'); // Replace with your audio file path
     fft = new p5.FFT();
     mic = new p5.AudioIn();
     mic.start();
     fft.setInput(mic);
 
     sceneStartTime = millis(); // Initialize the scene start time
-    
-    colorMode(HSB, 100);
+
+    sc2Eyes.push(new Sc2EYES(trebleEnergy, 0, 0, 1));
+    sc2Eyes.push(new Sc2EYES(trebleEnergy, 0, 0, 2));
+    sc2Eyes.push(new Sc2EYES(highMidEnergy, 0, 0, 3));
+    sc2Eyes.push(new Sc2EYES(highMidEnergy, 0, 0, 4));
+
 }
 
 function draw() {
+    background(0); // Clear the background
     tint(255, 90); // alpha 0-100
     image(collageBackground, 0, 0, width, height);
     noTint();
 
     if (audioOn) {
         fft.analyze();
-        bassEnergy = fft.getEnergy("bass"); // Low frequency energy
-        lowMidEnergy = fft.getEnergy("lowMid"); // Low mid frequency energy
-        midEnergy = fft.getEnergy("mid"); // Mid frequency energy
-        highMidEnergy = fft.getEnergy("highMid"); // High mid frequency energy
+        bassEnergy = fft.getEnergy(16); // Low frequency energy
+        lowMidEnergy = fft.getEnergy(32); // Low mid frequency energy
+        midEnergy = fft.getEnergy(64); // Mid frequency energy
+        highMidEnergy = fft.getEnergy(128); // High mid frequency energy
         trebleEnergy = fft.getEnergy("treble"); // High frequency energy
 
         // console.log("Bass Energy: ", bassEnergy); // Log bass energy for debugging
@@ -119,7 +127,7 @@ function draw() {
     // Switch scenes every 30 seconds (30000 milliseconds)
     if (elapsedTime > 30000) {
         currentScene++;
-        if (currentScene > 3) {
+        if (currentScene > 2) {
             currentScene = 1; // Loop back to scene1
         }
         sceneStartTime = millis(); // Reset the scene start time
@@ -134,10 +142,10 @@ function draw() {
     } else if (currentScene === 2) {
         sceneTransition();
         scene2();
+    }
     // } else if (currentScene === 3) {
     //     sceneTransition();
     //     scene2();
-    }
 }
 
 function mousePressed() {
@@ -146,13 +154,34 @@ function mousePressed() {
     console.log("Audio context resumed and microphone started");
     console.log("Mouse Pressed X: " + mouseX);
     console.log("Mouse Pressed Y: " + mouseY);
+
+    if(!startAudio){
+        mic = new p5.AudioIn(); // Create an audio input
+        fft = new p5.FFT(); // Create a Fast Fourier Transform
+        fft.setInput(mic); // Set the audio input for the FFT
+        fft.setInput(music); // Set the audio input for the FFT
+
+        music = new p5.SoundFile('./Brittle_Bones_Nicky_3.wav', () => {
+            console.log('Music loaded successfully');
+            music.play(); // Play the music once it's loaded
+        }, (err) => {
+            console.error('Failed to load music:', err);
+        }); // Create a sound file for music
+
+
+        // mic.start(); // Start the audio input
+        startAudio = true; // Set the start audio flag to true;
+    }
+
 }
 
 // 1 pair of eyes
 function scene1() {
-    let angle = 0;
 
-    fill(map(trebleEnergy, 0, volSenseSlider.slider.value(), 0, 100), 100, 50); // Hue Shift
+    let hue = (trebleEnergy * volSenseSlider.slider.value()) % 255; // Hue Shift
+    //console.log(`Hue: ${hue}`); // Debugging: Log the hue value
+
+    fill(hue, 255, 127); // Hue Shift
     let timeSinceLastBeat = millis() - lastBeatTime;
     let radiusC = map(timeSinceLastBeat, 0, beatInterval, 0, maxRadius);
     maxRadius = globeScale / 500; // Set the maximum radius of the circle
@@ -181,18 +210,23 @@ function scene2() {
     let Sc2Brightness = map(highMidEnergy, 0, volSenseSlider.slider.value(), 0, 100);
     let Sc2Saturation = map(midEnergy, 0, volSenseSlider.slider.value(), 0, 100);
 
+    // Update properties of Sc2EYES instances
+    sc2Eyes[0].update(trebleEnergy, Sc2Saturation, Sc2Brightness);
+    sc2Eyes[1].update(trebleEnergy, Sc2Saturation, Sc2Brightness);
+    sc2Eyes[2].update(highMidEnergy, Sc2Saturation, Sc2Brightness);
+    sc2Eyes[3].update(highMidEnergy, Sc2Saturation, Sc2Brightness);
 
-    new Sc2EYES(trebleEnergy, Sc2Saturation, Sc2Brightness, 1);
-    new Sc2EYES(trebleEnergy, Sc2Saturation, Sc2Brightness, 2);
-    new Sc2EYES(highMidEnergy, Sc2Saturation, Sc2Brightness, 3);
-    new Sc2EYES(highMidEnergy, Sc2Saturation, Sc2Brightness, 4);
+    // Display the eyes
+    for (let eye of sc2Eyes) {
+        eye.display();
+    }
 }
 
 // 10-15 pairs of eyes
-function scene3() {
+//function scene3() {
     // Iterate over the eyes array and call displayEyes for each instance
     
-}
+//}
 
 function sceneTransition() {
     if (resetAlpha) {
@@ -201,7 +235,7 @@ function sceneTransition() {
     }
     rectMode(CENTER);
     noStroke();
-    fill(0, alphaT);
+    fill(0, 0, 0, alphaT);
     rect(width / 2, height / 2, width, height);
     alphaT -= fadeSpeed;
     if (alphaT <= 0) {
