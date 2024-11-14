@@ -34,7 +34,7 @@ canvas {
     appearance: none;
     width: 2vh; /* Handle height */
     height: 2vh; /* Handle width */
-    background: #4CAF50; /* Green handle */
+    background: #ff64ff; /* Green handle */
     border-radius: 50%; /* Make it a circle */
     cursor: pointer; /* Cursor on hover */
   }
@@ -43,7 +43,7 @@ canvas {
   #sensitivitySlider::-moz-range-thumb {
     width: 25px; /* Handle width */
     height: 25px; /* Handle height */
-    background: #4CAF50; /* Green handle */
+    background: #ff64ff; /* Green handle */
     border-radius: 50%; /* Make it a circle */
     cursor: pointer; /* Cursor on hover */
   }
@@ -52,7 +52,7 @@ canvas {
   #sensitivitySlider::-ms-thumb {
     width: 25px; /* Handle width */
     height: 25px; /* Handle height */
-    background: #4CAF50; /* Green handle */
+    background: #ff64ff; /* Green handle */
     border-radius: 50%; /* Make it a circle */
     cursor: pointer; /* Cursor on hover */
   }
